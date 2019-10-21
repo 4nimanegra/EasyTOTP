@@ -1,0 +1,87 @@
+<html>
+
+	<script src="sha1-min.js"></script>
+	<script>
+
+		var data = localStorage.getItem("mypass");
+
+		function newpass(){
+
+			localStorage.setItem("mypass", userpass.value);
+			data = localStorage.getItem("mypass");
+			newotppass.style.visibility="hidden";
+			otppass.style.visibility="";
+
+		}
+
+		function hideMe(){
+			
+			newotppass.style.visibility="";
+			otppass.style.visibility="hidden";
+		
+		}
+	</script>
+
+	<body>
+		<center>
+			<div id="otppass">
+				<div id="pass" size="64"></div><br>
+				<button onClick="hideMe();">New Password</button>
+			</div>
+			<div id="newotppass">
+				<input name="userpass" id="userpass"></input>
+				<button onClick="newpass();">OK</button><br>
+			</div>
+		</center>
+	</body>
+
+	<script>
+
+	if(data == null){
+
+		newotppass.style.visibility="";
+		otppass.style.visibility="hidden";
+
+	}else{
+
+		newotppass.style.visibility="hidden";
+		otppass.style.visibility="";
+
+	}
+
+	function generate(){
+
+		if(data != null){
+
+			date = new Date();
+			mypass=""+CryptoJS.SHA1(data);
+			aux=""+Math.floor((date.getTime())/30000);
+			while(aux.length < 20){
+				
+				aux="0"+aux;
+			
+			}
+			mypass=""+CryptoJS.SHA1(mypass+aux);
+			offset = parseInt(mypass[mypass.length-1],16)*2;
+			otp="";
+			for(i=0;i<8;i++){
+
+				otp=otp+mypass[(offset+i)%mypass.length];
+			
+			}
+			otp=""+(parseInt(otp,16)%Math.pow(10,6));
+			while(otp.length < 6){
+				
+				otp="0"+otp;
+			
+			};
+			pass.innerHTML=otp;
+		
+		}
+
+		setTimeout(generate, 1000);}
+		generate();
+
+	</script>
+
+</html>
